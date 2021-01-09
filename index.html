@@ -46,15 +46,26 @@
             </td>
           </table>
           <script>
+            getID = () => {
+                return { content : document.getElementById('sourceCode').value,
+                         iframe : document.getElementById('targetCode')};
+            }  
+            preConfigContentIframe = (iframe) => {
+                return (iframe.contentWindow)? iframe.contentWindow
+                        :(iframe.contentDocument) ? iframe.contentDocument.document
+                        :iframe.contentDocument.document;
+                }
+            openCloseStream = (iframe, content) => {
+                if (iframe != null){
+                    iframe.document.open();
+                    iframe.document.write(content);
+                    iframe.document.close();
+                }
+            }
             function runCode(){
-                var content = document.getElementById('sourceCode').value;
-                var iframe  = document.getElementById('targetCode');
-                iframe =
-                (iframe.contentWindow)? iframe.contentWindow:(iframe.contentDocument)?
-                iframe.contentDocument.document:iframe.contentDocument.document;
-                iframe.document.open();
-                iframe.document.write(content);
-                iframe.document.close();
+                var {content, iframe} = getID();
+                iframe = preConfigContentIframe(iframe);
+                openCloseStream(iframe, content);
                 return false;
             }
             runCode();
